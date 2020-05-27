@@ -8,6 +8,7 @@ import numpy as np
 
 # Read in the dataset
 OkCupid = pd.read_csv(r"Data\profiles.csv")
+# Make this into a function, to simplify the different versions of read in
 
 # Check that the dataset looks fine
 OkCupid.head(5)
@@ -19,6 +20,26 @@ row, col = OkCupid.shape
 
 #Store the names of each column
 col_Names = list(OkCupid.columns)
+
+#### Add check for type in col:
+#### Set the correct types to each variable:
+# to change use .astype() 
+OkCupid.dtypes
+
+# to change use .astype() 
+cpi_wb.dtypes #cols are objects
+
+for column in cpi_wb.columns:
+    cpi_wb[column] = cpi_wb[column].astype(float)
+
+cpi_wb.dtypes #cols are float
+
+
+### Print a table after the read in, for each col:
+# type of variable 
+# number of observations
+# number of missings
+# 
 
 # Returns by default only numeric variables
 OkCupid.describe()
@@ -39,6 +60,10 @@ OkCupid[OkCupid.sex == "m"]
 list( OkCupid["sex"].unique() )
 
 OkCupid.head(5)
+
+
+
+
 
 ### Histogram:
 import matplotlib.pyplot as plt
