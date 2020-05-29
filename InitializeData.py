@@ -12,40 +12,45 @@
     
     Functions:
     ----------
-    get_df: Creates a dataframe 
-    GraphicalInspectionGeneral: Plotting in 2D
-    GraphicalInspectionGeneral_3D: Plotting in 3D
+    __init__: Creates a dataframe 
+    returnDf: return the dataframe
  
 """
 
 import pandas as pd
 
-def get_df(DataPath, FileType, sheetName=None):
-    """ Create a dataframe using Pandas
 
-       Parameters
-    ----------
-    DataPath:  string
-        the path to the file.
-    FileType: string
-        Says which filetype to read in.
-        Options are: "excel" and "csv"
-    sheetName: string
-        If filetype is Excel and there are multiple sheets within the Excel file,
-        sheetName specifies which sheet to read in.
-        By default sheetName is sat to empty.
-    Output
-    ------
-    A dataframe from Pandas
+class ReadData(): 
+      
+    # init method or constructor 
+    def __init__(self, DataPath, FileType, sheetName):
+        if FileType == "excel" and sheetName == None:
+            self.df = pd.read_excel(DataPath)
+        elif FileType == "excel" and sheetName != None:
+            self.df = pd.read_excel(DataPath, sheet_name = sheetName)
+        elif FileType == "csv":
+            self.df = pd.read_csv(DataPath)
+        # Everytime a new dataframe is loaded, print some basic info: 
+        self.basicInfo()
 
-    """
-    df = None
-    if FileType == "excel" and sheetName == None:
-        df = pd.read_excel(DataPath)
-    elif FileType == "excel" and sheetName != None:
-        df = pd.read_excel(DataPath, sheet_name = sheetName)
-    elif FileType == "csv":
-        df = pd.read_csv(DataPath)
-    return df
+    def returnDf(self):
+        return self.df
+
+    def basicInfo(self):
+        row, col = self.df.shape
+        print("row", row)
+        print("col", col)
+        print("")
+        
+# fix a better style for the print of "basicInfo"
+# should here use "self.df.dtype" to show what types the cols are. 
+# is it possible two put the col_name and dtype in a dict?
+#       And give the user the possibility to answer "yes/no" if they want to changes some dtype.
+#       Then let them change the different values in the dict which then is used to change the dtypes of the cols
 
 
+    def keyStatistics(self):
+         print(self.df.describe() )
+
+
+       

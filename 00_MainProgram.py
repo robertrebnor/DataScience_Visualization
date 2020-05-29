@@ -29,7 +29,9 @@ FileType = "csv"
 # Enter if there is a specific sheet in Execl to read in
 sheetName = None
 
-OkCupid = initdt.get_df(DataPath, FileType, sheetName)
+OkCupid = initdt.ReadData(DataPath, FileType, sheetName)
 
+#make a copy here for simplicity when testing
+#OkCupid2 = OkCupid.returnDf().copy()
 
-OkCupid
+OkCupid.basicInfo()

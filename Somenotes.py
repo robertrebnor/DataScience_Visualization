@@ -66,3 +66,61 @@ testData
 # Could I use this command? (at least this gives me the index starting 1999)
 testData[testData.Year > 1998] 
 
+########################3
+
+def get_df(DataPath, FileType, sheetName=None):
+    """ Create a dataframe using Pandas
+
+       Parameters
+    ----------
+    DataPath:  string
+        the path to the file.
+    FileType: string
+        Says which filetype to read in.
+        Options are: "excel" and "csv"
+    sheetName: string
+        If filetype is Excel and there are multiple sheets within the Excel file,
+        sheetName specifies which sheet to read in.
+        By default sheetName is sat to empty.
+    Output
+    ------
+    A dataframe from Pandas
+
+    """
+    df = None
+    if FileType == "excel" and sheetName == None:
+        df = pd.read_excel(DataPath)
+    elif FileType == "excel" and sheetName != None:
+        df = pd.read_excel(DataPath, sheet_name = sheetName)
+    elif FileType == "csv":
+        df = pd.read_csv(DataPath)
+    return df
+
+class ReadData(): 
+      
+    # init method or constructor 
+    def __init__(self, DataPath, FileType, sheetName): 
+        if FileType == "excel" and sheetName == "":
+            self = pd.read_excel(DataPath)
+        elif FileType == "excel" and sheetName != "":
+            self = pd.read_excel(DataPath, sheet_name = sheetName)
+        elif FileType == "csv":
+            self = pd.read_csv(DataPath)
+
+
+
+
+# add option of only looking at key variables?
+# add option if data set needs to be cleaned (remove rows or cols) and set indexes
+
+
+
+ def __init__(self, DataPath): 
+        self = pd.read_excel(DataPath)
+
+#self.model = model
+#self.color = color 
+          
+ #   def show(self): 
+ #       print("Model is", self.model ) 
+  #      print("color is", self.color ) 

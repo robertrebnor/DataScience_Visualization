@@ -13,7 +13,7 @@ OkCupid = pd.read_csv(r"Data\profiles.csv")
 # Check that the dataset looks fine
 OkCupid.head(5)
 
-OkCupid.info()
+OkCupid2.info()
 
 #Store the number of rows and cols:
 row, col = OkCupid.shape
@@ -24,7 +24,7 @@ col_Names = list(OkCupid.columns)
 #### Add check for type in col:
 #### Set the correct types to each variable:
 # to change use .astype() 
-OkCupid.dtypes
+OkCupid2.dtypes
 
 # to change use .astype() 
 cpi_wb.dtypes #cols are objects
