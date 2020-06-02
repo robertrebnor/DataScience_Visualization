@@ -130,26 +130,32 @@ class ReadData():
         bp_NumbLow = len(IQR_lower)
         bp_NumbHigh = len(IQR_higher)
 
-        print(" ")
-        print("Result for column: ", col_name)
-        print("count: ", count)
-        print("numUnique: ", numUnique)
-        print("numNaN: ", numNaN)
-        print("mean: ", round(mean, 2) )
-        print("std: ", round(std, 2) )
-        print("min: ", round(min, 2) )
-        print("q25: ", round(q25, 2) )
-        print("q50: ", round(q50, 2) )
-        print("q75: ", round(q75, 2) )
-        print("max: ", round(max, 2) )
-        print("z_NumbLow: ", z_NumbLow)
-        print("z_NumbHigh: ", z_NumbHigh)
-        print("bp_NumbLow: ", bp_NumbLow)
-        print("bp_NumbHigh: ", bp_NumbHigh)
+        return count, numUnique, numNaN, round(mean, 2), round(std, 2), round(min, 2), round(q25, 2),  round(q50, 2), round(q75, 2), round(max, 2), z_NumbLow, z_NumbHigh, bp_NumbLow, bp_NumbHigh
+
+    def printKeyStatsNumerical(self, col_names):
+        # col_names is a list
+        # test using df
+        KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN", "Mean", "Std.dev.", "Min", "Q25", "Q50", "Q75", "Max", "Number of Z less -3", "Number of Z above 3", "ExtremVal Box plot low", "ExtremVal Box plot high"]
+                    }
+
+        #Add a first column
+        col_names.insert(0, "Key statistics") 
+
+        # set ut the dataframe
+        printKeyStatsNum = pd.DataFrame(KS_list, columns = col_names)
+
+        #plot key stats for each column into the df
+        for col in col_names:
+            listValues = []
+            listValues = self.keyStatsNumerical(col)
+
+            for i in range( len(listValues)):
+                printKeyStatsNum.loc[i,col] = listValues[i]
+            
+        print(printKeyStatsNum.head(13))
 
 
-
-
+       
 
 
     def keyStatistics(self):

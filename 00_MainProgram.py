@@ -68,9 +68,16 @@ new_dTypes = {
 OkCupid.change_dTypes(new_dTypes)
 
 
-col_name = "height"
-OkCupid.keyStatsNumerical(col_name)
+col_name = ["height"]
+testList = []
+testList = OkCupid.keyStatsNumerical(col_name)
 
+testList
+
+
+col_names = ["height", "income", "age"]
+
+OkCupid.printKeyStatsNumerical(col_names)
 
 
 
