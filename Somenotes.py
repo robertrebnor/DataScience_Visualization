@@ -1,3 +1,17 @@
+#################
+
+## Some ideas:
+# Store the output that is to be printed into dataframes?
+
+
+
+
+
+
+
+
+###############
+
 
 #Use the date as index instead of numbers?
 df.set_index('date', inplace=True)	#Note: date could be "year" or multiple hirarqy
@@ -124,3 +138,43 @@ class ReadData():
  #   def show(self): 
  #       print("Model is", self.model ) 
   #      print("color is", self.color ) 
+
+
+##Testing the dType using OkCupid2:
+
+
+#make a copy here for simplicity when testing
+OkCupid2 = OkCupid.returnDf().copy()
+
+testDict = OkCupid2.dtypes.to_dict()
+
+longestKey = None 
+if len ( max(testDict.keys(), key=len)) > len("Variable"):
+    longestKey = len ( max(testDict.keys(), key=len))
+else: 
+    longestKey = len("Variable")
+
+print("Variable".ljust(longestKey, " ") , ":  dtype")
+for keys,values in testDict.items():
+    print(keys.ljust(longestKey, ' ') , ": ", str(values).ljust(10, ' '), " ", len( OkCupid2[keys].unique())  )
+print("emd")
+
+#Different types of dtypes:
+#category
+#datetime64
+#float64
+
+#to changes in df
+change_dTypes = { 
+                "sex": "category",
+                "status": "category",
+                }
+
+for keys,values in change_dTypes.items(): #the dict containing the changes
+    if keys in testDict: #if correct cols
+        OkCupid2[keys] =  OkCupid2[keys].astype(values)
+    else:
+        print("The column ", keys ," was not found.")
+print("done")
+
+OkCupid2.dtypes
