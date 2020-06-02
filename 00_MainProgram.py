@@ -15,7 +15,6 @@
 
 import InitializeData as initdt
 
-
 #########################################################
 ###                                                   ###
 ###                 1. Initialize dataset             ###
@@ -31,7 +30,19 @@ sheetName = None
 
 OkCupid = initdt.ReadData(DataPath, FileType, sheetName)
 
-#make a copy here for simplicity when testing
-#OkCupid2 = OkCupid.returnDf().copy()
+#From this, I want to change some of the dTypes:
+#Different types of dtypes:
+#category
+#datetime64
+#float64
 
-OkCupid.basicInfo()
+#to changes in df
+new_dTypes = { 
+                "sex": "category",
+                "status": "category",
+                }
+
+OkCupid.change_dTypes(new_dTypes)
+
+
+
