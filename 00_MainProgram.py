@@ -68,6 +68,29 @@ new_dTypes = {
 OkCupid.change_dTypes(new_dTypes)
 
 
+col_name = "height"
+OkCupid.keyStatsNumerical(col_name)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #make a copy here for simplicity when testing
 OkCupid2 = OkCupid.returnDf().copy()

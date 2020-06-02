@@ -18,7 +18,8 @@
 """
 
 import pandas as pd
-
+from scipy import stats
+import numpy as np
 
 class ReadData(): 
       
@@ -87,6 +88,69 @@ class ReadData():
         print("Changes complete, the updated dTypes are:")
         print("")
         self.print_Col_dtype()
+
+    def keyStatsNumerical(self, col_name):
+        # should make it so it only reads in self.df[col_name] once?
+        # Numerical variables:
+        # Count
+        count = len( self.df[col_name] )
+        # Number of unique obs?
+        numUnique = len( self.df[col_name].unique() )
+        # Number of misings
+        numNaN = self.df[col_name].isna().sum()
+        # mean
+        mean = self.df[col_name].mean() 
+        # sted
+        std = self.df[col_name].std() 
+        # min
+        min = self.df[col_name].min() 
+        # 25%
+        q25 = self.df[col_name].quantile(0.25)
+        # 50 %
+        q50 = self.df[col_name].quantile(0.50)
+        # 75 %
+        q75 = self.df[col_name].quantile(0.75)
+        # max
+        max = self.df[col_name].max() 
+
+        # possible lower and upper extreme values
+        # with Z-score  
+        z_lower =  self.df[ stats.zscore(self.df[col_name].notna())  < -3 ]  ## Works?
+        z_NumbLow = len( z_lower)
+
+        z_higher =  self.df[ stats.zscore(self.df[col_name].notna())  > 3 ]
+        z_NumbHigh = len( z_higher)
+
+        # Using box-plot (IQR):
+        IQR = q75 - q25 #IQR = Q3 - Q1,  interquartile range.
+
+        IQR_lower =  self.df[ self.df[col_name] <= (q25 - 1.5 * IQR) ] #Find the lower extreme values
+        IQR_higher = self.df[ self.df[col_name] >= (q75 + 1.5 * IQR) ]
+
+        bp_NumbLow = len(IQR_lower)
+        bp_NumbHigh = len(IQR_higher)
+
+        print(" ")
+        print("Result for column: ", col_name)
+        print("count: ", count)
+        print("numUnique: ", numUnique)
+        print("numNaN: ", numNaN)
+        print("mean: ", round(mean, 2) )
+        print("std: ", round(std, 2) )
+        print("min: ", round(min, 2) )
+        print("q25: ", round(q25, 2) )
+        print("q50: ", round(q50, 2) )
+        print("q75: ", round(q75, 2) )
+        print("max: ", round(max, 2) )
+        print("z_NumbLow: ", z_NumbLow)
+        print("z_NumbHigh: ", z_NumbHigh)
+        print("bp_NumbLow: ", bp_NumbLow)
+        print("bp_NumbHigh: ", bp_NumbHigh)
+
+
+
+
+
 
     def keyStatistics(self):
          print(self.df.describe() )
