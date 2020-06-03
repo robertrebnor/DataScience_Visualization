@@ -89,6 +89,54 @@ class ReadData():
         print("")
         self.print_Col_dtype()
 
+    def getSpesific_dTypes(self, wanted_dType):
+        df_dict = self.df.dtypes.to_dict() 
+
+        listOfKeys = list()
+        listOfItems = df_dict.items()
+        for item  in listOfItems:
+            if item[1] == wanted_dType:
+                listOfKeys.append(item[0])
+        return  listOfKeys
+
+    def get_dTypesInGroup(self, variableCategory):
+        ### Get descriptive statistics for the different types of variables:
+        # Grouping dtypes:
+        # Quantitative variable:
+        #   *int64
+        #   *float64
+        # Qualitative variables:
+        #   *bool
+        #   *category
+        # String:   (not addressed yet)
+        #   *object 
+        # Time:    (not addressed yet)
+        #   *datetime64
+        #   *timedelta[ns]
+        listOf_dType = list()
+        if variableCategory == "quantitative":
+            listOf_dType = [ "int64", "float64" ]
+        elif variableCategory == "qualitative":
+            listOf_dType = [ "bool", "category" ]
+        elif variableCategory == "string": 
+            listOf_dType = [ "object" ]
+        elif variableCategory == "time": 
+            print("Not fixed yet")
+            #listOf_dType = [ "datetime64", "timedelta[ns]" ]
+        else:
+            print("Chosen variable category not recognized")
+        return listOf_dType
+    
+    def printDescriptiveStats_byVariableType(self, variableCategory):
+        listOf_dTypes = self.get_dTypesInGroup(variableCategory)
+        
+        listOfVariableNames = list()
+        for dType in listOf_dTypes:
+            listOfVariableNames.extend( self.getSpesific_dTypes(dType) ) 
+        self.printKeyStatsNumerical(listOfVariableNames)
+
+
+
     def keyStatsNumerical(self, col_name):
         # should make it so it only reads in self.df[col_name] once?
         # Numerical variables:
@@ -115,11 +163,18 @@ class ReadData():
 
         # possible lower and upper extreme values
         # with Z-score  
-        z_lower =  self.df[ stats.zscore(self.df[col_name].notna())  < -3 ]  ## Works?
-        z_NumbLow = len( z_lower)
 
-        z_higher =  self.df[ stats.zscore(self.df[col_name].notna())  > 3 ]
-        z_NumbHigh = len( z_higher)
+        # Manually calc z score
+        df_zscore = (self.df[col_name] - mean )/ std
+
+        z_NumbLow = np.count_nonzero(df_zscore < -3)
+        z_NumbHigh = np.count_nonzero(df_zscore > 3) 
+
+        # Using "stats" - Does not work?
+        #z_lower =  self.df[ stats.zscore(self.df[col_name].notna())  < -3 ] 
+        #z_NumbLow = len( z_lower)
+        #z_higher =  self.df[ stats.zscore(self.df[col_name].notna())  > 3 ]
+        #z_NumbHigh = len( z_higher)
 
         # Using box-plot (IQR):
         IQR = q75 - q25 #IQR = Q3 - Q1,  interquartile range.
@@ -138,11 +193,13 @@ class ReadData():
         KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN", "Mean", "Std.dev.", "Min", "Q25", "Q50", "Q75", "Max", "Number of Z less -3", "Number of Z above 3", "ExtremVal Box plot low", "ExtremVal Box plot high"]
                     }
 
+        # Copy a list for cols i df:
+        df_colList = col_names.copy()
         #Add a first column
-        col_names.insert(0, "Key statistics") 
+        df_colList.insert(0, "Key statistics") 
 
-        # set ut the dataframe
-        printKeyStatsNum = pd.DataFrame(KS_list, columns = col_names)
+        # Set up the dataframe
+        printKeyStatsNum = pd.DataFrame(KS_list, columns = df_colList)
 
         #plot key stats for each column into the df
         for col in col_names:
@@ -151,8 +208,7 @@ class ReadData():
 
             for i in range( len(listValues)):
                 printKeyStatsNum.loc[i,col] = listValues[i]
-            
-        print(printKeyStatsNum.head(13))
+        print(printKeyStatsNum.head(14))
 
 
        
