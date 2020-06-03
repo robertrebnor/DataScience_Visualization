@@ -12,8 +12,9 @@
     
     Functions:
     ----------
-    __init__: Creates a dataframe 
-    returnDf: return the dataframe
+    __init__: Creates a dataframe, prints basic info
+    returnDf: Return the dataframe
+    basicInfo: 
  
 """
 
@@ -25,6 +26,10 @@ class ReadData():
       
     # init method or constructor 
     def __init__(self, DataPath, FileType, sheetName):
+        """ 
+        Creates a dataframe from a datafile and prints basic info,
+        such as rows, cols, head, col names and variable types.
+        """
         if FileType == "excel" and sheetName == None:
             self.df = pd.read_excel(DataPath)
         elif FileType == "excel" and sheetName != None:
@@ -35,9 +40,16 @@ class ReadData():
         self.basicInfo()
 
     def returnDf(self):
+        """Returns the dataframe
+        """
         return self.df
 
     def basicInfo(self):
+        """ Prints basic info about a dataframe.
+        Prints the number of rows and cols, the 5 first observations 
+        in the dataframe and the column names and variable types.
+        """
+        
         lineMark = "-"
         baselength = 30
         row, col = self.df.shape
@@ -64,55 +76,64 @@ class ReadData():
 #       Then let them change the different values in the dict which then is used to change the dtypes of the cols
 
     def print_Col_dtype(self):
+        """For each column in a dataframe it prints the variable type and the number of unique observations.
+        """
         lineMark = "-"
-        df_dict = self.df.dtypes.to_dict() 
+        df_dict = self.df.dtypes.to_dict() #Want the col names and dypes togehter in a dict
         longestKey = None #The length of this is just to left-adjust the printing of the dict
-        if len ( max(df_dict.keys(), key=len)) > len("Variable"): #tests if the "Variable" is shorter than the longes key
+        if len ( max(df_dict.keys(), key=len)) > len("Variable"): #Tests if "Variable" is shorter than the longes key
             longestKey = len ( max(df_dict.keys(), key=len))
         else: 
             longestKey = len("Variable")
 
-        print("Variable".ljust(longestKey, " ") , "   dtype".ljust(12, ' '), "Unique obs.") 
-        print(lineMark*( longestKey + 8 + 12 +  5)  )
-        for keys,values in df_dict.items(): #prints the keys and values from the dict in a nice format
+        print("Variable".ljust(longestKey, " ") , "   dtype".ljust(12, ' '), "Unique obs.") #Prints the header of the table
+        print(lineMark*( longestKey + 8 + 12 +  5)  ) 
+        for keys,values in df_dict.items(): #Prints the keys and values from the dict in a nice format, and the number of unique observations 
             print(keys.ljust(longestKey, ' '), ": ", str(values).ljust(10, ' '), " ", len( self.df[keys].unique())   ) #consider fix the number of unique obs by str().rjust
         
     def change_dTypes(self, new_dTypes):
+        """Changes variable types for columns.
+        Takes a given dict with new dTypes for columns and changes this in the dataframe.
+        """
         df_dict = self.df.dtypes.to_dict() 
-        for keys,values in new_dTypes.items(): #the dict containing the changes
-            if keys in df_dict: #if correct cols
+        for keys,values in new_dTypes.items(): #The dict containing the changes
+            if keys in df_dict: #If a col names in the given dict is in the dataframe, then change the dType in the dataframe.
                 self.df[keys] =  self.df[keys].astype(values)
             else:
                 print("The column ", keys ," was not found.")
         print("")
         print("Changes complete, the updated dTypes are:")
         print("")
-        self.print_Col_dtype()
+        self.print_Col_dtype() #Prints the update version of col names, dType and number of unique obs.
 
     def getSpesific_dTypes(self, wanted_dType):
+        """ Gets the col names for a given dType.
+        For a given dType variable, find all the cols with this dType.
+        """
         df_dict = self.df.dtypes.to_dict() 
 
         listOfKeys = list()
-        listOfItems = df_dict.items()
-        for item  in listOfItems:
+        listOfItems = df_dict.items() #A list of dTypes in the dataframe
+        for item  in listOfItems: 
             if item[1] == wanted_dType:
                 listOfKeys.append(item[0])
         return  listOfKeys
 
-    def get_dTypesInGroup(self, variableCategory):
-        ### Get descriptive statistics for the different types of variables:
-        # Grouping dtypes:
-        # Quantitative variable:
-        #   *int64
-        #   *float64
-        # Qualitative variables:
-        #   *bool
-        #   *category
-        # String:   (not addressed yet)
-        #   *object 
-        # Time:    (not addressed yet)
-        #   *datetime64
-        #   *timedelta[ns]
+    def get_dTypesInGroup(self, variableCategory): #Remove this out from this class, can be used for the different types of Visualization
+        """ Get the dTypes for a spesific variable category.
+        Grouping dtypes by:
+         Quantitative variable:
+           *int64
+           *float64
+         Qualitative variables:
+           *bool
+           *category
+         String:   (not addressed yet)
+           *object 
+         Time:    (not addressed yet)
+           *datetime64
+           *timedelta[ns]
+        """
         listOf_dType = list()
         if variableCategory == "quantitative":
             listOf_dType = [ "int64", "float64" ]
