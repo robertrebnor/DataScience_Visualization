@@ -26,9 +26,24 @@ class ReadData():
       
     # init method or constructor 
     def __init__(self, DataPath, FileType, sheetName):
-        """ 
-        Creates a dataframe from a datafile and prints basic info,
+        """
+        Creates a dataframe from a datafile. Prints basic info,
         such as rows, cols, head, col names and variable types.
+
+        Parameters
+        ----------
+        DataPath:  string
+            the path to the file.
+        FileType: string
+            Says which filetype to read in.
+            Options are: "excel" and "csv"
+        sheetName: string
+            If filetype is Excel and there are multiple sheets within the Excel file,
+            sheetName specifies which sheet to read in.
+            By default sheetName is sat to empty.
+        Output
+        ------
+        A dataframe from Pandas
         """
         if FileType == "excel" and sheetName == None:
             self.df = pd.read_excel(DataPath)
@@ -46,6 +61,9 @@ class ReadData():
 
     def basicInfo(self):
         """ Prints basic info about a dataframe.
+
+        Output
+        ------
         Prints the number of rows and cols, the 5 first observations 
         in the dataframe and the column names and variable types.
         """
@@ -93,7 +111,16 @@ class ReadData():
         
     def change_dTypes(self, new_dTypes):
         """Changes variable types for columns.
-        Takes a given dict with new dTypes for columns and changes this in the dataframe.
+
+        Parameters
+        ----------
+        new_dTypes:  dict
+            the keys is the name of the columns that we want to change the dType of
+            the values is the dType we want to change to
+        
+        Output
+        ------
+        Changes the dType for the wanted variables in the dataframe and prints the result.
         """
         df_dict = self.df.dtypes.to_dict() 
         for keys,values in new_dTypes.items(): #The dict containing the changes
@@ -108,7 +135,15 @@ class ReadData():
 
     def getSpesific_dTypes(self, wanted_dType):
         """ Gets the col names for a given dType.
-        For a given dType variable, find all the cols with this dType.
+
+        Parameters
+        ----------
+        wanted_dType:  string
+            The dType we are searching for.
+        
+        Output
+        ------        
+        Returns a list of a given dType variable, find all the cols with this dType.
         """
         df_dict = self.df.dtypes.to_dict() 
 
@@ -119,20 +154,30 @@ class ReadData():
                 listOfKeys.append(item[0])
         return  listOfKeys
 
+    #This is a static method:
+    #@staticmethod
     def get_dTypesInGroup(self, variableCategory): #Remove this out from this class, can be used for the different types of Visualization
         """ Get the dTypes for a spesific variable category.
-        Grouping dtypes by:
-         Quantitative variable:
-           *int64
-           *float64
-         Qualitative variables:
-           *bool
-           *category
-         String:   (not addressed yet)
-           *object 
-         Time:    (not addressed yet)
-           *datetime64
-           *timedelta[ns]
+
+        Parameters
+        ----------
+        variableCategory:  string
+            The name of the variable category.
+            Grouping dtypes by:
+                Quantitative variable:
+                    *int64
+                    *float64
+                Qualitative variables:
+                    *bool
+                    *category
+                String:   (not addressed yet)
+                    *object 
+                Time:    (not addressed yet)
+                    *datetime64
+                    *timedelta[ns]
+        Output
+        ------        
+        Returns a list with the dTypes within a variable category.       
         """
         listOf_dType = list()
         if variableCategory == "quantitative":
@@ -149,18 +194,25 @@ class ReadData():
         return listOf_dType
     
     def printDescriptiveStats_byVariableType(self, variableCategory):
+        """Prints descriptive statistics for a spesific variable category 
+        """
+        # Get the different dTypes within a spesific variable category
         listOf_dTypes = self.get_dTypesInGroup(variableCategory)
         
+        # For each of the dTypes, get the variable names 
         listOfVariableNames = list()
         for dType in listOf_dTypes:
             listOfVariableNames.extend( self.getSpesific_dTypes(dType) ) 
+        # Get and print the key statistics for the choicen variables
         self.printKeyStatsNumerical(listOfVariableNames)
 
 
 
     def keyStatsNumerical(self, col_name):
+        """Caculates key descriptive statistics for numerical variables
+        """
         # should make it so it only reads in self.df[col_name] once?
-        # Numerical variables:
+        
         # Count
         count = len( self.df[col_name] )
         # Number of unique obs?
@@ -209,12 +261,16 @@ class ReadData():
         return count, numUnique, numNaN, round(mean, 2), round(std, 2), round(min, 2), round(q25, 2),  round(q50, 2), round(q75, 2), round(max, 2), z_NumbLow, z_NumbHigh, bp_NumbLow, bp_NumbHigh
 
     def printKeyStatsNumerical(self, col_names):
-        # col_names is a list
-        # test using df
+        """Prints the key descriptive statistics for numerical variables.
+        Presents the results using a dataframe.
+        
+        # Col_names: list with the name of the columns with numerical values
+        """
+        # A dict, containing all the key statistics that is to be presented
         KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN", "Mean", "Std.dev.", "Min", "Q25", "Q50", "Q75", "Max", "Number of Z less -3", "Number of Z above 3", "ExtremVal Box plot low", "ExtremVal Box plot high"]
                     }
 
-        # Copy a list for cols i df:
+        # Copy a list for cols i df.
         df_colList = col_names.copy()
         #Add a first column
         df_colList.insert(0, "Key statistics") 
