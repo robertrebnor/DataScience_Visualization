@@ -13,8 +13,11 @@
 #import pandas as pd 
 #import numpy as np
 
-import InitializeData as initdt
-import DataProcessing as dataproc
+#import InitializeData as InitData
+#import DataProcessing as dataproc
+#import DescriptiveVisualization as desVis
+
+import DescriptiveStatistics as DescStats
 
 #########################################################
 ###                                                   ###
@@ -29,7 +32,8 @@ FileType = "csv"
 # Enter if there is a specific sheet in Execl to read in
 sheetName = None
 
-OkCupid = initdt.ReadData(DataPath, FileType, sheetName)
+## Testing out inheritance, using the "Descriptive Statistics" to initialize the file
+OkCupid = DescStats.DescriptiveStatistics(DataPath, FileType, sheetName) 
 
 #From this, I want to change some of the dTypes:
 #Different types of dtypes:
@@ -40,7 +44,6 @@ OkCupid = initdt.ReadData(DataPath, FileType, sheetName)
 #category
 #datetime64
 #timedelta[ns]
-
 
 #to changes in df
 new_dTypes = { 
@@ -69,6 +72,7 @@ new_dTypes = {
 # Change dTypes in the dataframe
 OkCupid.change_dTypes(new_dTypes)
 
+
 ### Get descriptive statistics for the different types of variables:
 # The choices:
 #   *quantitative
@@ -89,11 +93,16 @@ variableCategory = "qualitative"
 # Number of unique categories
 # Frequency within each category?
 
-# test DataProcessing:
+# testing:
 column = "body_type"
 
 # Need to fix this
 OkCupid2 = OkCupid.returnDf().copy()
+# Look at this instead: returnDf
+
+
+
+# test DataProcessing:
 OkCupid_datproc = dataproc.DataProcessing(OkCupid2)
 
 # Strange sort?
@@ -101,55 +110,14 @@ OkCupid_datproc.byNumbers_LimitNumberCategories(column)
 
 OkCupid_datproc.byPercentage_LimitNumberCategories(column)
 
+OkCupid_datproc = dataproc.DataProcessing(OkCupid2)
 
 
-##################Plots, move these into DescriptiveVisualization 
-
-#make a copy here for simplicity when testing
-OkCupid2 = OkCupid.returnDf().copy()
-
-column = "sex"
-
-listCategories = OkCupid2[column].unique() #returns a list with the uniquq variable names, so this is the lables
-
-CountsByName = OkCupid2[column].value_counts().to_frame()
-
-quantity = []
-for cat in listCategories:
-    quantity.append( CountsByName.loc[cat,column])
-print("done")
+#########Vis
+OkCupid_Vis = desVis.VisualizeDescriptive(OkCupid2)
 
 
-plt.pie(quantity, labels = listCategories, autopct = '% 1.1f %%', shadow = True, startangle = 140 )
-plt.show()
-
-plt.pie(quantity, labels = listCategories, startangle=90, autopct='%.1f%%', shadow = False)
-plt.show()
-
-
-import numpy as np
-#Bar plot:
-height = quantity
-bars = listCategories
-y_pos = np.arange(len(bars))
- 
-# Create bars and choose color
-plt.bar(y_pos, height)
- 
-# Add title and axis names
-plt.title('My title')
-plt.xlabel('categories')
-plt.ylabel('values')
- 
-# Limits for the Y axis
-#plt.ylim(0,60)
- 
-# Create names
-plt.xticks(y_pos, bars)
- 
-# Show graphic
-plt.show()
-
+OkCupid_Vis.PieChart(column, choiceLimit = "Categories", limit = 10)
 
 ###################### Some notes
 #listCategories = OkCupid2[column].unique() #returns a list with the uniquq variable names, so this is the lables for plots
