@@ -15,28 +15,29 @@
     .. :
  
 """
-import DataProcessing as dataproc
+import DataProcessing as DataProc
 import matplotlib.pyplot as plt
 
-class VisualizeDescriptive(): 
+class VisualizeDescriptive(DataProc.DataProcessing): 
 
-    def __init__(self, dataframe):
-        self.df = dataframe
+    def __init__(self,DataPath, FileType, sheetName):
+        super().__init__(DataPath, FileType, sheetName)
     
     def PieChart(self, column, choiceLimit = None, limit = None):
         Data_df = None
         if choiceLimit == None:
-            Data_df = dataproc.DataProcessing.sortCol_byPercentage(self, column)
-            print(Data_df)
+            Data_df = self.sortCol_byPercentage(column) #DataProc.DataProcessing.sortCol_byPercentage(self, column)
         elif choiceLimit == "Categories":
-            Data_df = dataproc.DataProcessing.byNumbers_LimitNumberCategories(self, column, limit)
+            Data_df = self.byNumbers_LimitNumberCategories(column, limit) # DataProc.DataProcessing.byNumbers_LimitNumberCategories(self, column, limit)
         elif choiceLimit == "Percentage":
-            Data_df = dataproc.DataProcessing.byPercentage_LimitNumberCategories(self, column, limit)
+            Data_df = self.byPercentage_LimitNumberCategories(column, limit) #DataProc.DataProcessing.byPercentage_LimitNumberCategories(self, column, limit)
         else:
             print("Choice not recognized")
 
+        Data_df.reset_index(inplace=True)
+
         # Returns a list with the uniquq variable names
-        listCategories = Data_df[column].unique() 
+        listCategories = Data_df[column].unique()  #trouble here? is this col now called index from ".byNumbers_LimitNumberCategories"
 
         # Set the currency ISO as the row index
         Data_df.set_index(column, inplace=True)

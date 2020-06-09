@@ -16,10 +16,12 @@
  
 """
 
-class DataProcessing():
+import InitializeData as InitData
 
-    def __init__(self, dataframe):
-        self.df = dataframe
+class DataProcessing(InitData.ReadData):
+
+    def __init__(self,DataPath, FileType, sheetName):
+        super().__init__(DataPath, FileType, sheetName)
 
     def sortCol_byPercentage(self, column):
 

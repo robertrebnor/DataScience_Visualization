@@ -17,7 +17,10 @@
 #import DataProcessing as dataproc
 #import DescriptiveVisualization as desVis
 
-import DescriptiveStatistics as DescStats
+#import DescriptiveStatistics as DescStats
+#import DataProcessing as DataProc
+
+import SetUpFile as SetUpFile
 
 #########################################################
 ###                                                   ###
@@ -32,8 +35,8 @@ FileType = "csv"
 # Enter if there is a specific sheet in Execl to read in
 sheetName = None
 
-## Testing out inheritance, using the "Descriptive Statistics" to initialize the file
-OkCupid = DescStats.DescriptiveStatistics(DataPath, FileType, sheetName) 
+## Testing multiple inheritance, using the "SetUpFile" to initialize 
+OkCupid = SetUpFile.StartProg(DataPath, FileType, sheetName) 
 
 #From this, I want to change some of the dTypes:
 #Different types of dtypes:
@@ -85,7 +88,7 @@ variableCategory = "quantitative"
 OkCupid.printDescriptiveStats_byVariableType(variableCategory)
 
 # Testing qualitative:
-variableCategory = "qualitative"
+#variableCategory = "qualitative"
 
 # Category variables:
 # Count
@@ -96,28 +99,29 @@ variableCategory = "qualitative"
 # testing:
 column = "body_type"
 
-# Need to fix this
-OkCupid2 = OkCupid.returnDf().copy()
-# Look at this instead: returnDf
+# Test PieChart with out any limit
+OkCupid.PieChart(column)
+
+# Test PieChart with limited number of categories 
+OkCupid.PieChart(column, choiceLimit = "Categories", limit = 5)
+
+# Test PieChart with a lower limit on percentage.
+OkCupid.PieChart(column, choiceLimit = "Percentage", limit = 5)
 
 
 
-# test DataProcessing:
-OkCupid_datproc = dataproc.DataProcessing(OkCupid2)
-
-# Strange sort?
-OkCupid_datproc.byNumbers_LimitNumberCategories(column)
-
-OkCupid_datproc.byPercentage_LimitNumberCategories(column)
-
-OkCupid_datproc = dataproc.DataProcessing(OkCupid2)
 
 
-#########Vis
-OkCupid_Vis = desVis.VisualizeDescriptive(OkCupid2)
 
 
-OkCupid_Vis.PieChart(column, choiceLimit = "Categories", limit = 10)
+
+
+
+
+
+
+
+
 
 ###################### Some notes
 #listCategories = OkCupid2[column].unique() #returns a list with the uniquq variable names, so this is the lables for plots
