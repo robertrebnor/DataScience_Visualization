@@ -15,8 +15,10 @@
     .. :
  
 """
-import DataProcessing as DataProc
 import matplotlib.pyplot as plt
+import numpy as np
+
+import DataProcessing as DataProc
 
 class VisualizeDescriptive(DataProc.DataProcessing): 
 
@@ -48,4 +50,39 @@ class VisualizeDescriptive(DataProc.DataProcessing):
         
         plt.pie(quantity, labels = listCategories, startangle=90, autopct='%.1f%%', shadow = False)
         plt.show()
+
+    def Histogram(self, column, variableCategory):
+
+        variable = self.df[column]
+        num_bins = len( variable.unique() )
+
+        if variableCategory == "quantitative":
+            x_min = variable.min()
+            x_max = variable.max()
+
+            n, bins, patches = plt.hist(variable, bins=num_bins, range = [x_min, x_max], density=False, histtype='bar', color='b', edgecolor='k', alpha=0.5)
+            plt.xlim(x_min, x_max)
+        
+        elif variableCategory == "qualitative":
+
+            variable_dict = variable.value_counts().to_dict()
+
+            bars = list() #name of the bars
+            num_obs = list() #height of the bares
+            for keys,values in variable_dict.items():
+                bars.append(keys)
+                num_obs.append(values)
+
+            y_pos = np.arange(len(bars))
+            
+            # Create bars
+            plt.bar(y_pos, num_obs)
+            # Create names on the x-axis
+            plt.xticks(y_pos, bars, rotation = 90)
+            #plt.yticks()
+            # Fix space below plot to type bar names
+            plt.tight_layout()
+
+        plt.show()
+
 

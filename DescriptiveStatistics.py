@@ -102,26 +102,23 @@ class DescriptiveStatistics(InitData.ReadData):
         print("")
         self.print_Col_dtype() #Prints the update version of col names, dType and number of unique obs.
 
-    def getSpesific_dTypes(self, wanted_dType):
+    def getSpesific_dTypes(self, dType_of_cols):
         """ Gets the col names for a given dType.
 
         Parameters
         ----------
-        wanted_dType:  string
-            The dType we are searching for.
+        dType_of_cols:  list
+            A list of the dType we are searching for.
         
         Output
         ------        
         Returns a list of a given dType variable, find all the cols with this dType.
         """
-        df_dict = self.df.dtypes.to_dict() 
+        
+        list_of_cols = self.df.select_dtypes(include= dType_of_cols).columns
+        list(list_of_cols)
 
-        listOfKeys = list()
-        listOfItems = df_dict.items() #A list of dTypes in the dataframe
-        for item  in listOfItems: 
-            if item[1] == wanted_dType:
-                listOfKeys.append(item[0])
-        return  listOfKeys
+        return list_of_cols
 
     #This is a static method:
     #@staticmethod
@@ -169,12 +166,65 @@ class DescriptiveStatistics(InitData.ReadData):
         listOf_dTypes = self.get_dTypesInGroup(variableCategory)
         
         # For each of the dTypes, get the variable names 
-        listOfVariableNames = list()
-        for dType in listOf_dTypes:
-            listOfVariableNames.extend( self.getSpesific_dTypes(dType) ) 
+        listOfVariableNames = list( self.getSpesific_dTypes(listOf_dTypes) )
+        
         # Get and print the key statistics for the choicen variables
-        self.printKeyStatsNumerical(listOfVariableNames)
+        self.printKeyStatsNumerical(listOfVariableNames ,variableCategory)
 
+         
+    def printKeyStatsNumerical(self, col_names, variableCategory):
+        """Prints the key descriptive statistics for numerical variables.
+        Presents the results using a dataframe.
+        
+        # Col_names: list with the name of the columns with numerical values
+        """
+        if variableCategory == "quantitative":
+            # A dict, containing all the key statistics that is to be presented
+            KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN", "Mean", "Std.dev.", "Min", "Q25", "Q50", "Q75", "Max", "Number of Z less -3", "Number of Z above 3", "ExtremVal Box plot low", "ExtremVal Box plot high"]
+                        }
+        elif variableCategory == "qualitative":
+            KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN"]
+                        }
+                      # Add: Frequency within each category? or the top three larges and lowest?
+
+        # Copy a list for cols i df.
+        df_colList = col_names.copy()
+        #Add a first column
+        df_colList.insert(0, "Key statistics") 
+
+        # Set up the dataframe
+        printKeyStats = pd.DataFrame(KS_list, columns = df_colList)
+
+        ## THIS IF AND THE keyStatsNumerical and the keyStatsQualitative must be fixed, contains much of the same code
+        if variableCategory == "quantitative":
+            #plot key stats for each column into the df
+            for col in col_names:
+                listValues = []
+                listValues = self.keyStatsNumerical(col)
+
+                for i in range( len(listValues)):
+                    printKeyStats.loc[i,col] = listValues[i]
+        elif variableCategory == "qualitative":
+            for col in col_names:
+                listValues = []
+                listValues = self.keyStatsQualitative(col)
+
+                for i in range( len(listValues)):
+                    printKeyStats.loc[i,col] = listValues[i]
+
+        print(printKeyStats.head(len(printKeyStats.index)  ))
+
+
+    def keyStatsQualitative(self, col_name):
+        #["Count", "Number of Unique", "Number of NaN"]
+        # Count
+        count = len( self.df[col_name] )
+        # Number of unique obs?
+        numUnique = len( self.df[col_name].unique() )
+        # Number of misings
+        numNaN = self.df[col_name].isna().sum()
+
+        return count, numUnique, numNaN
 
 
     def keyStatsNumerical(self, col_name):
@@ -229,32 +279,6 @@ class DescriptiveStatistics(InitData.ReadData):
 
         return count, numUnique, numNaN, round(mean, 2), round(std, 2), round(min, 2), round(q25, 2),  round(q50, 2), round(q75, 2), round(max, 2), z_NumbLow, z_NumbHigh, bp_NumbLow, bp_NumbHigh
 
-    def printKeyStatsNumerical(self, col_names):
-        """Prints the key descriptive statistics for numerical variables.
-        Presents the results using a dataframe.
-        
-        # Col_names: list with the name of the columns with numerical values
-        """
-        # A dict, containing all the key statistics that is to be presented
-        KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN", "Mean", "Std.dev.", "Min", "Q25", "Q50", "Q75", "Max", "Number of Z less -3", "Number of Z above 3", "ExtremVal Box plot low", "ExtremVal Box plot high"]
-                    }
-
-        # Copy a list for cols i df.
-        df_colList = col_names.copy()
-        #Add a first column
-        df_colList.insert(0, "Key statistics") 
-
-        # Set up the dataframe
-        printKeyStatsNum = pd.DataFrame(KS_list, columns = df_colList)
-
-        #plot key stats for each column into the df
-        for col in col_names:
-            listValues = []
-            listValues = self.keyStatsNumerical(col)
-
-            for i in range( len(listValues)):
-                printKeyStatsNum.loc[i,col] = listValues[i]
-        print(printKeyStatsNum.head(14))
 
 
        

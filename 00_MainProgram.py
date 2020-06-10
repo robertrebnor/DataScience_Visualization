@@ -10,16 +10,6 @@
     4.
 """ 
 
-#import pandas as pd 
-#import numpy as np
-
-#import InitializeData as InitData
-#import DataProcessing as dataproc
-#import DescriptiveVisualization as desVis
-
-#import DescriptiveStatistics as DescStats
-#import DataProcessing as DataProc
-
 import SetUpFile as SetUpFile
 
 #########################################################
@@ -88,7 +78,8 @@ variableCategory = "quantitative"
 OkCupid.printDescriptiveStats_byVariableType(variableCategory)
 
 # Testing qualitative:
-#variableCategory = "qualitative"
+variableCategory = "qualitative"
+OkCupid.printDescriptiveStats_byVariableType(variableCategory)
 
 # Category variables:
 # Count
@@ -96,7 +87,13 @@ OkCupid.printDescriptiveStats_byVariableType(variableCategory)
 # Number of unique categories
 # Frequency within each category?
 
-# testing:
+
+
+
+
+
+
+# Test PieChart
 column = "body_type"
 
 # Test PieChart with out any limit
@@ -108,6 +105,17 @@ OkCupid.PieChart(column, choiceLimit = "Categories", limit = 5)
 # Test PieChart with a lower limit on percentage.
 OkCupid.PieChart(column, choiceLimit = "Percentage", limit = 5)
 
+# Test histogram with a quantitative variable 
+column = "age"
+variableCategory = "quantitative"
+
+OkCupid.Histogram(column, variableCategory)
+
+# Test histogram with a qualitative variable
+column = "body_type"
+variableCategory = "qualitative"
+
+OkCupid.Histogram(column, variableCategory)
 
 
 
