@@ -150,15 +150,6 @@ plt.scatter(x, y, marker='o')
 plt.show()
 
 
-
-
-
-
-
-
-
-
-
 ###################### Some notes
 #listCategories = OkCupid2[column].unique() #returns a list with the uniquq variable names, so this is the lables for plots
 
