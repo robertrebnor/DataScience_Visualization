@@ -18,6 +18,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 import DataProcessing as DataProc
 
 class VisualizeDescriptive(DataProc.DataProcessing): 

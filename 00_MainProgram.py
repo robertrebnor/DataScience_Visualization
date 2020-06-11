@@ -134,6 +134,7 @@ OkCupid.Histogram(column, variableCategory)
 
 #test using: height, income and age
 import matplotlib.pyplot as plt
+
 plt.style.use('seaborn-whitegrid')
 
 test_df = OkCupid.returnDf()
@@ -144,10 +145,34 @@ test_df["height"] = test_df["height"]*2.54
 x = test_df["age"]
 y = test_df["height"]
 
-
+x = test_df["age"]
+y = test_df["height"]
 
 plt.scatter(x, y, marker='o')
 plt.show()
+
+
+# test using seaborn
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+test_df = OkCupid.returnDf()
+
+#change height from inches to cm
+test_df["height"] = test_df["height"]*2.54
+
+# Use the 'hue' argument to provide a factor variable
+sns.lmplot(x='age', y= 'height', data=test_df, hue='sex', fit_reg=False, legend=False)
+
+
+# Move the legend to an empty part of the plot
+plt.legend(loc='lower right')
+
+plt.show()
+
+
+
 
 
 ###################### Some notes

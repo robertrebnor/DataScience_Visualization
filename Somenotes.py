@@ -1,5 +1,14 @@
 #################
 
+
+### Need to be install:
+# conda install seaborn
+
+
+
+
+
+
 ## Some ideas:
 # Store the output that is to be printed into dataframes?
 
