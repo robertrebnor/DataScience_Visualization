@@ -9,9 +9,11 @@
     3.
     4.
 """ 
+from time import time
 
 import SetUpFile as SetUpFile
 
+start_time = time()
 #########################################################
 ###                                                   ###
 ###                 1. Initialize dataset             ###
@@ -66,6 +68,12 @@ new_dTypes = {
 OkCupid.change_dTypes(new_dTypes)
 
 
+#########################################################
+###                                                   ###
+###                 2. Descriptive Statistics         ###
+###                                                   ###                     
+#########################################################
+
 ### Get descriptive statistics for the different types of variables:
 # The choices:
 #   *quantitative
@@ -82,18 +90,16 @@ variableCategory = "qualitative"
 OkCupid.printDescriptiveStats_byVariableType(variableCategory)
 
 # Category variables:
-# Count
-# Missing
-# Number of unique categories
 # Frequency within each category?
 
+end_time  = time()
+time_used = end_time - start_time
+print(f"Time elapsed: {time_used:.2f} seconds.") #9.92 sec, slow
 
 
+######### Testing visualization #############################
 
-
-
-
-# Test PieChart
+### Test PieChart
 column = "body_type"
 
 # Test PieChart with out any limit
@@ -105,6 +111,8 @@ OkCupid.PieChart(column, choiceLimit = "Categories", limit = 5)
 # Test PieChart with a lower limit on percentage.
 OkCupid.PieChart(column, choiceLimit = "Percentage", limit = 5)
 
+
+### Testing histogram
 # Test histogram with a quantitative variable 
 column = "age"
 variableCategory = "quantitative"
@@ -117,9 +125,29 @@ variableCategory = "qualitative"
 
 OkCupid.Histogram(column, variableCategory)
 
+### Testing scatter plots
+
+# Simple scatter plot
+
+# Scatter plot with multiple categories and colors
+
+
+#test using: height, income and age
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-whitegrid')
+
+test_df = OkCupid.returnDf()
+
+#change height from inches to cm
+test_df["height"] = test_df["height"]*2.54
+
+x = test_df["age"]
+y = test_df["height"]
 
 
 
+plt.scatter(x, y, marker='o')
+plt.show()
 
 
 

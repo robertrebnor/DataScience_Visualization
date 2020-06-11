@@ -183,7 +183,7 @@ class DescriptiveStatistics(InitData.ReadData):
             KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN", "Mean", "Std.dev.", "Min", "Q25", "Q50", "Q75", "Max", "Number of Z less -3", "Number of Z above 3", "ExtremVal Box plot low", "ExtremVal Box plot high"]
                         }
         elif variableCategory == "qualitative":
-            KS_list = { "Key statistics": ["Count", "Number of Unique", "Number of NaN"]
+            KS_list = { "Key statistics": ["Count", "Unique categories", "Number of NaN"]
                         }
                       # Add: Frequency within each category? or the top three larges and lowest?
 
