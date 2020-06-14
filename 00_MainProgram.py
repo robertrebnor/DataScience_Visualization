@@ -137,6 +137,8 @@ import matplotlib.pyplot as plt
 
 plt.style.use('seaborn-whitegrid')
 
+
+
 test_df = OkCupid.returnDf()
 
 #change height from inches to cm
@@ -155,21 +157,53 @@ plt.show()
 # test using seaborn
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+# On boxes: https://stackoverflow.com/questions/4700614/how-to-put-the-legend-out-of-the-plot
 
 test_df = OkCupid.returnDf()
+sns.set()
+sns.relplot(x='age' y='height', col="time", hue="smoker", style="smoker", size="size", data=tips);
+
+# darkgrid, whitegrid, dark, white, and ticks
+#sns.set_style("whitegrid")
+sns.relplot(x='age', y='height', hue='sex', data=test_df,legend=False)
+#plt.legend(,loc='lower right')
+plt.legend(["m", "f"], bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
+plt.tight_layout()
+plt.show()
+
+
+sns.lmplot(x='age', y= 'height', data=test_df, fit_reg=False, legend=False, kind ="scatter")
+plt.show()
+
+
+g = sns.relplot(x='age', y='height', hue='sex', data=test_df)
+
+# resize figure box to -> put the legend out of the figure
+box = g.ax.get_position() # get position of figure
+g.ax.set_position([box.x0, box.y0, box.width * 0.85, box.height]) # resize position
+
+# Put a legend to the right side
+#g.ax.legend(loc='center right', bbox_to_anchor=(1.25, 0.5), ncol=1)
+
+plt.show(g)
+
+
+
+
+
+
 
 #change height from inches to cm
 test_df["height"] = test_df["height"]*2.54
 
 # Use the 'hue' argument to provide a factor variable
-sns.lmplot(x='age', y= 'height', data=test_df, hue='sex', fit_reg=False, legend=False)
+g=sns.lmplot(x='age', y= 'height', data=test_df, hue='sex', fit_reg=False, legend=False)
 
 
 # Move the legend to an empty part of the plot
-plt.legend(loc='lower right')
+plt.legend(["m","f"],loc='lower right')
 
-plt.show()
+plt.show(g)
 
 
 
